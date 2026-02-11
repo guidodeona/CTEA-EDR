@@ -1,0 +1,89 @@
+risk_thresholds:
+  high: 80
+  medium: 50
+  medium: 50
+  low: 20
+
+virustotal:
+  api_key: ""  # GET YOUR KEY AT: https://www.virustotal.com/gui/user/apikey
+  enabled: false
+
+filesystem:
+  monitored_paths:
+    windows:
+      - "C:\\Windows\\System32\\drivers\\etc"  # Hosts file location
+      - "C:\\Users\\Public"
+    linux:
+      - "/etc"
+      - "/tmp"
+
+process:
+  suspicious_paths:
+    windows:
+      - "mimikatz.exe"
+      - "powershell.exe -enc"
+      - "cmd.exe /c"
+      - "regia.exe"
+    linux:
+      - "nc -e"
+      - "ncat"
+      - "bash -i"
+
+  behavioral:
+    suspicious_parents:
+      - parent: "winword.exe"
+        child: "cmd.exe"
+        risk: 90
+      - parent: "winword.exe"
+        child: "powershell.exe"
+        risk: 100
+      - parent: "excel.exe"
+        child: "cmd.exe"
+        risk: 90
+      - parent: "excel.exe"
+        child: "powershell.exe"
+        risk: 100
+      - parent: "chrome.exe"
+        child: "cmd.exe"
+        risk: 80
+      - parent: "chrome.exe"
+        child: "powershell.exe"
+        risk: 80
+      - parent: "firefox.exe"
+        child: "cmd.exe"
+        risk: 80
+      - parent: "outlook.exe"
+        child: "cmd.exe"
+        risk: 95
+      - parent: "py.exe"
+        child: "cmd.exe"
+        risk: 100
+      - parent: "python.exe"
+        child: "cmd.exe"
+        risk: 100
+
+yara:
+  enabled: true
+  rules_path: "rules/yara/all_rules.yar"
+
+persistence:
+  enabled: true
+  registry_keys:
+    - "Software\\Microsoft\\Windows\\CurrentVersion\\Run"
+    - "Software\\Microsoft\\Windows\\CurrentVersion\\RunOnce"
+
+honeyfile:
+  enabled: true
+  path: "C:\\Users\\Public\\confidential_passwords.txt" # Change this path as needed
+  alert_message: "HONEYFILE TRAP TRIGGERED: Unauthorized Access Attempt!"
+
+notifications:
+  enabled: false
+  webhook_url: "" # Enter Discord/Slack webhook here
+
+network:
+  suspicious_ports:
+    - 4444 # Metasploit default
+    - 1337 # Elite/L33t
+    - 6667 # IRC (Botnets)
+    - 31337 # Back Orifice
